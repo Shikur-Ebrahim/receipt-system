@@ -299,9 +299,9 @@ export default function ReceiptGenerator() {
                 >
                   {`ETB ${formData.amount} debited from ${formData.senderName.toUpperCase()} for ${formData.receiverName.toUpperCase()}-${formData.receiverAccount.toUpperCase()}\u00A0\u00A0on ${formData.date} with transaction ID: ${formData.transactionId.toUpperCase()}.\u00A0Total Amount Debited ETB ${formData.totalAmount} with\u00A0\u00A0commission of ETB ${formData.commission} , 15% VAT of ETB${formData.vat} and 5% Disaster Fund ofETB${formData.disasterFund}.`}
                 </p>
-                <div className="mt-8 flex justify-center pb-8 relative">
+                <div className="mt-1 flex justify-center pb-1 relative">
                   <div
-                    className="p-6 bg-white relative border border-gray-200"
+                    className="p-2 bg-white relative border border-gray-200"
                     style={{ boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.04)" }}
                   >
                     <QRCode value={`TxnID:${formData.transactionId},Amt:${formData.amount}`} size={160} level="H" />
@@ -311,7 +311,7 @@ export default function ReceiptGenerator() {
                   </div>
                 </div>
 
-                <div className="flex justify-center mt-3 mb-6">
+                <div className="flex justify-center mt-0 mb-6">
                   <button className="bg-[#cc9b52] text-black font-[700] text-[15px] tracking-[0.5px] rounded-full px-8 py-3.5 shadow-sm flex items-center gap-2.5">
                     <img src="/icons/view-receipt.png" alt="Receipt Icon" className="w-[22px] h-[22px] object-contain" />
                     VIEW RECEIPT
