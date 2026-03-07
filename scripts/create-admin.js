@@ -19,8 +19,8 @@ admin.initializeApp({
 const email = process.argv[2];
 const password = process.argv[3];
 
-if (!email || !password) {
-  console.log('Usage: node scripts/create-admin.js <email> <password>');
+if (!email) {
+  console.log('Usage: node scripts/create-admin.js <email> [<password>]');
   process.exit(1);
 }
 
@@ -33,6 +33,10 @@ async function createAdminUser(email, password) {
       console.log(`User already exists with UID: ${user.uid}. Updating claims...`);
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
+        if (!password) {
+          console.error(`Error: User ${email} not found and no password provided to create them.`);
+          process.exit(1);
+        }
         user = await admin.auth().createUser({
           email: email,
           password: password,
@@ -46,7 +50,7 @@ async function createAdminUser(email, password) {
 
     // Set custom user claims
     await admin.auth().setCustomUserClaims(user.uid, { admin: true });
-    
+
     // Create/Update user document in Firestore to reflect admin status
     const db = admin.firestore();
     await db.collection('users').doc(user.uid).set({
@@ -54,7 +58,7 @@ async function createAdminUser(email, password) {
       email: email,
       isAdmin: true,
       role: "admin",
-      balance: 1000 
+      balance: 1000
     }, { merge: true });
 
     console.log(`Success! ${email} is now an admin (Custom Claims & Firestore Role Set).`);
