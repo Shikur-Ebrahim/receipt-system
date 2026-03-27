@@ -318,7 +318,7 @@ export default function ReceiptGenerator() {
                 </p>
                 <div className="mt-1 flex justify-center pb-1 relative">
                   <div
-                    className="p-3 bg-white relative flex items-center justify-center"
+                    className="p-6 bg-white relative flex items-center justify-center"
                     style={{ boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.04)" }}
                   >
                     <QRCode value={`TxnID:${formData.transactionId},Amt:${formData.amount}`} size={160} level="H" />
