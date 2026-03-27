@@ -55,9 +55,18 @@ export default function ReceiptGenerator() {
 
   const handleDownload = async () => {
     if (!receiptRef.current || !user) return;
+    const receiptEl = receiptRef.current;
+    // The receipt preview uses Tailwind `scale-[0.9]` which can change the QR/text size
+    // captured by html2canvas. Temporarily remove transform while capturing.
+    const prevTransform = receiptEl.style.transform;
+    const prevTransformOrigin = receiptEl.style.transformOrigin;
+    receiptEl.style.transform = "none";
+    receiptEl.style.transformOrigin = "top left";
 
     if (balance !== null && balance < downloadFee) {
       setShowBalanceModal(true);
+      receiptEl.style.transform = prevTransform;
+      receiptEl.style.transformOrigin = prevTransformOrigin;
       return;
     }
 
@@ -68,7 +77,7 @@ export default function ReceiptGenerator() {
         setBalance(newBalance);
       }
 
-      const canvas = await html2canvas(receiptRef.current, {
+      const canvas = await html2canvas(receiptEl, {
         scale: 3,
         useCORS: true,
         logging: false,
@@ -81,6 +90,9 @@ export default function ReceiptGenerator() {
       link.click();
     } catch (e) {
       console.error("Error generating receipt image:", e);
+    } finally {
+      receiptEl.style.transform = prevTransform;
+      receiptEl.style.transformOrigin = prevTransformOrigin;
     }
   };
 
@@ -294,19 +306,24 @@ export default function ReceiptGenerator() {
               <div className="bg-[#f9f9f9] px-5 py-6">
                 <span className="text-gray-400 text-sm font-normal mb-1 block">Message</span>
                 <p
-                  className="text-[#1a2b3c] text-[15px] font-[700] leading-[1.6]"
-                  style={{ wordSpacing: "0.5px", letterSpacing: "0.1px", whiteSpace: "pre-wrap", overflowWrap: "break-word" }}
+                  className="text-[#1a2b3c] text-[13.5px] font-[700] leading-[1.55]"
+                  style={{
+                    wordSpacing: "0.4px",
+                    letterSpacing: "0.08px",
+                    whiteSpace: "pre-wrap",
+                    overflowWrap: "break-word",
+                  }}
                 >
                   {`ETB ${formData.amount} debited from ${formData.senderName.toUpperCase()} for ${formData.receiverName.toUpperCase()}-${formData.receiverAccount.toUpperCase()}\u00A0\u00A0on ${formData.date} with transaction ID: ${formData.transactionId.toUpperCase()}.\u00A0Total Amount Debited ETB ${formData.totalAmount} with\u00A0\u00A0commission of ETB ${formData.commission} , 15% VAT of ETB${formData.vat} and 5% Disaster Fund ofETB${formData.disasterFund}.`}
                 </p>
                 <div className="mt-1 flex justify-center pb-1 relative">
                   <div
-                    className="p-2 bg-white relative border border-gray-200"
+                    className="p-3 bg-white relative flex items-center justify-center"
                     style={{ boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.04)" }}
                   >
                     <QRCode value={`TxnID:${formData.transactionId},Amt:${formData.amount}`} size={160} level="H" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-1.5 shadow-sm flex items-center justify-center">
-                      <img src="/cbe-logo.png" alt="CBE Logo" className="w-[20px] h-[20px] object-contain" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-1.5 shadow-none flex items-center justify-center">
+                      <img src="/cbe-logo.png" alt="CBE Logo" className="w-[18px] h-[18px] object-contain" />
                     </div>
                   </div>
                 </div>
