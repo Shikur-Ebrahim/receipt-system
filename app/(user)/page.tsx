@@ -331,7 +331,7 @@ export default function ReceiptGenerator() {
                 </div>
 
                 <div className="flex justify-center mt-0 mb-6">
-                  <button className="bg-[#cc9b52] text-black font-[700] text-[15px] tracking-[0.5px] rounded-full px-8 py-3.5 shadow-sm flex items-center gap-2.5">
+                  <button className="bg-[#cc9b52] text-black font-[700] text-[15px] tracking-[0.5px] rounded-full px-8 py-3.5 border border-black/15 shadow-none flex items-center gap-2.5">
                     <img src="/icons/view-receipt.png" alt="Receipt Icon" className="w-[22px] h-[22px] object-contain" />
                     VIEW RECEIPT
                   </button>
