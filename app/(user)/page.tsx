@@ -308,20 +308,19 @@ export default function ReceiptGenerator() {
                 <p
                   className="text-[#1a2b3c] text-[13.5px] font-[700] leading-[1.55]"
                   style={{
-                    wordSpacing: "0.4px",
                     letterSpacing: "0.08px",
                     whiteSpace: "pre-wrap",
                     overflowWrap: "break-word",
                   }}
                 >
-                  {`ETB ${formData.amount} debited from ${formData.senderName.toUpperCase()} for ${formData.receiverName.toUpperCase()}-${formData.receiverAccount.toUpperCase()}\u00A0\u00A0on ${formData.date} with transaction ID: ${formData.transactionId.toUpperCase()}.\u00A0Total Amount Debited ETB ${formData.totalAmount} with\u00A0\u00A0commission of ETB ${formData.commission} , 15% VAT of ETB${formData.vat} and 5% Disaster Fund ofETB${formData.disasterFund}.`}
+                  {`ETB ${formData.amount} debited from ${formData.senderName.toUpperCase()} for ${formData.receiverName.toUpperCase()}-${formData.receiverAccount.toUpperCase()} on ${formData.date} with transaction ID: ${formData.transactionId.toUpperCase()}. Total Amount Debited ETB ${formData.totalAmount} with commission of ETB ${formData.commission}, 15% VAT of ETB ${formData.vat} and 5% Disaster Fund of ETB ${formData.disasterFund}.`}
                 </p>
                 <div className="mt-1 flex justify-center pb-1 relative">
                   <div
-                    className="p-6 bg-white relative flex items-center justify-center"
-                    style={{ boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.04)" }}
+                    className="p-6 bg-white relative flex items-center justify-center border-x border-b border-gray-200"
+                    style={{ boxShadow: "0px 14px 26px rgba(0, 0, 0, 0.10)" }}
                   >
-                    <QRCode value={`TxnID:${formData.transactionId},Amt:${formData.amount}`} size={160} level="H" />
+                    <QRCode value={`TxnID:${formData.transactionId},Amt:${formData.amount}`} size={140} level="H" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-1.5 shadow-none flex items-center justify-center">
                       <img src="/cbe-logo.png" alt="CBE Logo" className="w-[18px] h-[18px] object-contain" />
                     </div>
