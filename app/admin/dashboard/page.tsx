@@ -8,6 +8,12 @@ const sections = [
   { href: "/admin/users", label: "Manage Users", icon: "👥", desc: "View users and control sessions" },
   { href: "/admin/payments", label: "Payment Accounts", icon: "💳", desc: "Configure bank & mobile accounts" },
   { href: "/admin/settings", label: "System Settings", icon: "⚙️", desc: "Set fees and minimum deposit" },
+  { href: "/admin/telebirr-sample-upload", label: "Telebirr Template", icon: "🖼️", desc: "Upload sample template to Cloudinary" },
+  { href: "/admin/telebirr-sample", label: "Telebirr Editor", icon: "✍️", desc: "Edit values + generate receipts" },
+  { href: "/admin/telebirr-t2t-sample-upload", label: "Telebirr T2T Template", icon: "🖼️", desc: "Upload Telebirr→Telebirr templates" },
+  { href: "/admin/telebirr-t2t-sample", label: "Telebirr T2T Editor", icon: "✍️", desc: "Edit values + generate T2T receipts" },
+  { href: "/admin/cbe-b2b-sample-upload", label: "CBE B2B Template", icon: "🏦", desc: "Upload bank→bank receipt templates" },
+  { href: "/admin/cbe-b2b-sample", label: "CBE B2B Editor", icon: "🧾", desc: "Fill fields + download receipts" },
 ];
 
 export default function AdminDashboard() {

@@ -6,6 +6,7 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 
 interface UserData {
   id: string;
+  uid?: string;
   email: string;
   balance: number;
 }
@@ -27,6 +28,7 @@ export default function UsersPage() {
         const usersSnap = await getDocs(collection(db, "users"));
         const firestoreUsers = usersSnap.docs.map(d => ({
           id: d.id,
+          uid: (d.data() as any).uid as string | undefined,
           balance: d.data().balance || 0,
           email: "",
         }));
@@ -37,11 +39,13 @@ export default function UsersPage() {
           const emailMap: Record<string, string> = await response.json();
           const combined = firestoreUsers.map(u => ({
             ...u,
-            email: emailMap[u.id] || "—",
+            // Firestore doc id may NOT equal Firebase Auth uid, so match by `uid` field.
+            // If auth doesn't contain this user, show "No Email".
+            email: (u.uid ? emailMap[u.uid] : undefined) || emailMap[u.id] || "No Email",
           }));
           setUsers(combined);
         } else {
-          setUsers(firestoreUsers);
+          setUsers(firestoreUsers.map((u) => ({ ...u, email: "No Email" })));
         }
       } catch (error) {
         console.error("Error loading user data:", error);

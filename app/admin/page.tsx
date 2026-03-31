@@ -95,6 +95,24 @@ export default function AdminHomePage() {
         </svg>
       ),
     },
+    {
+      href: "/admin/telebirr-sample-upload",
+      label: "Telebirr Template",
+      desc: "Upload sample template",
+      color: "bg-emerald-50 border-emerald-100",
+      iconColor: "text-emerald-600",
+      iconBg: "bg-emerald-100",
+      icon: "🖼️",
+    },
+    {
+      href: "/admin/telebirr-sample",
+      label: "Telebirr Editor",
+      desc: "Edit & generate receipts",
+      color: "bg-indigo-50 border-indigo-100",
+      iconColor: "text-indigo-600",
+      iconBg: "bg-indigo-100",
+      icon: "✍️",
+    },
   ];
 
   return (
