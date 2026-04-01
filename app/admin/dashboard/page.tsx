@@ -35,7 +35,7 @@ export default function AdminDashboard() {
         <div className="relative z-10">
           <p className="text-white/70 font-bold text-sm uppercase tracking-widest mb-2">{greeting} 👋</p>
           <h1 className="text-3xl font-black tracking-tight leading-tight mb-3">
-            Welcome Back,<br />Admin!
+            Welcome Back,<br />
           </h1>
           <p className="text-white/80 font-medium text-sm leading-relaxed max-w-sm">
             You have full control over the CBE Receipt system. Use the sections below to manage users, payments, and settings.
