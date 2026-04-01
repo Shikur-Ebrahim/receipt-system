@@ -72,7 +72,7 @@ export default function TelebirrT2TSamplePage() {
   const [transactionNumber, setTransactionNumber] = useState("");
 
   const [fontScale, setFontScale] = useState(1.2);
-  const [textColor, setTextColor] = useState("#404040");
+  const [textColor, setTextColor] = useState("#3c3939");
   const [busy, setBusy] = useState(false);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
 

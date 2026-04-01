@@ -16,10 +16,10 @@ const REFERENCE_H = 1024;
 const BOXES = {
   // Amount must end before "(ETB)" so there's visible gap (and no overlap).
   // Also keep enough room on the left so the leading "-" is not clipped.
-  amountValue: { x0: 165, y0: 296, x1: 276, y1: 327 },
+  amountValue: { x0: 150, y0: 296, x1: 286, y1: 327 },
   // Static "(ETB)" label position in the template so preview can render it.
   // (Detected from the sample template screenshot used by this project: 489x1024.)
-  etbLabel: { x0: 277, y0: 313, x1: 313, y1: 329 },
+  etbLabel: { x0: 288, y0: 313, x1: 324, y1: 329 },
   transactionNumber: { x0: 350, y0: 425, x1: 450, y1: 440 },
   transactionTime: { x0: 307, y0: 460, x1: 452, y1: 475 },
   transactionTypeValue: { x0: 335, y0: 500, x1: 450, y1: 515 },
@@ -74,7 +74,7 @@ export default function TelebirrSamplePage() {
 
   // Default overlay font scale to match the receipt look.
   const [fontScale, setFontScale] = useState(1.05);
-  const [textColor, setTextColor] = useState("#404040");
+  const [textColor, setTextColor] = useState("#3c3939");
   const [busy, setBusy] = useState(false);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
 
