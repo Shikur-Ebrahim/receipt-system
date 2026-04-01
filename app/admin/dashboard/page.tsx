@@ -14,6 +14,10 @@ const sections = [
   { href: "/admin/telebirr-t2t-sample", label: "Telebirr T2T Editor", icon: "✍️", desc: "Edit values + generate T2T receipts" },
   { href: "/admin/cbe-b2b-sample-upload", label: "CBE B2B Template", icon: "🏦", desc: "Upload bank→bank receipt templates" },
   { href: "/admin/cbe-b2b-sample", label: "CBE B2B Editor", icon: "🧾", desc: "Fill fields + download receipts" },
+  { href: "/admin/cbe-app-green-sample-upload", label: "CBE App Green Template", icon: "🟩", desc: "Upload green app receipt screenshot" },
+  { href: "/admin/cbe-app-green-sample", label: "CBE App Green Editor", icon: "✨", desc: "Edit message section + export image" },
+  { href: "/admin/cbe-app-pink-sample-upload", label: "CBE App Pink Template", icon: "🩷", desc: "Upload pink app receipt screenshot" },
+  { href: "/admin/cbe-app-pink-sample", label: "CBE App Pink Editor", icon: "🌸", desc: "Edit message section + export image" },
 ];
 
 export default function AdminDashboard() {

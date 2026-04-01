@@ -113,6 +113,24 @@ export default function AdminHomePage() {
       iconBg: "bg-indigo-100",
       icon: "✍️",
     },
+    {
+      href: "/admin/cbe-app-green-sample-upload",
+      label: "CBE App Green Template",
+      desc: "Upload green app screenshot",
+      color: "bg-green-50 border-green-100",
+      iconColor: "text-green-600",
+      iconBg: "bg-green-100",
+      icon: "🟩",
+    },
+    {
+      href: "/admin/cbe-app-green-sample",
+      label: "CBE App Green Editor",
+      desc: "Edit message and export",
+      color: "bg-lime-50 border-lime-100",
+      iconColor: "text-lime-600",
+      iconBg: "bg-lime-100",
+      icon: "✨",
+    },
   ];
 
   return (

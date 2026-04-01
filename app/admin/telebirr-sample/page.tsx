@@ -45,6 +45,12 @@ function formatTelebirrTime(d: Date) {
   )}:${pad2(d.getSeconds())}`;
 }
 
+function formatDigitsWithCommas(digits: string) {
+  const onlyDigits = (digits ?? "").replace(/\D/g, "");
+  if (!onlyDigits) return "";
+  return onlyDigits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export default function TelebirrSamplePage() {
   const receiptWrapRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +64,7 @@ export default function TelebirrSamplePage() {
   const [templateError, setTemplateError] = useState<string | null>(null);
 
   // We keep only the editable digits here, because the Telebirr amount is always rendered as: -<digits>.00
-  const [amountDigits, setAmountDigits] = useState("3506");
+  const [amountDigits, setAmountDigits] = useState("5515");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [transactionTime, setTransactionTime] = useState("");
   const [transactionType, setTransactionType] = useState("Transfer To Bank");
@@ -68,6 +74,7 @@ export default function TelebirrSamplePage() {
 
   // Default overlay font scale to match the receipt look.
   const [fontScale, setFontScale] = useState(1.05);
+  const [textColor, setTextColor] = useState("#404040");
   const [busy, setBusy] = useState(false);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
 
@@ -148,8 +155,8 @@ export default function TelebirrSamplePage() {
     // Shrink slightly earlier for 4+ integer digits so the last digit fits in the narrower box.
     const amountFactor = isAmount ? Math.max(0.45, 1 / (1 + Math.max(0, digitLenInt - 3) * 0.14)) : 1;
     let fontSize = Math.max(10, Math.round(boxH * 0.92 * fontScale * amountFactor));
-    // Amount number should be slightly larger, but with less visual thickness.
-    if (isAmount) fontSize = Math.round(fontSize * 1.07);
+    // Amount (balance) should be more prominent.
+    if (isAmount) fontSize = Math.round(fontSize * 1.16);
     // Ensure amount never clips for large numbers (e.g. 1000000.00).
     if (isAmount) {
       const maxByWidth = boxW / Math.max(1, 0.62 * Math.max(1, digitLenInt));
@@ -165,7 +172,7 @@ export default function TelebirrSamplePage() {
       fontSize,
       lineHeight: "1",
       fontWeight: isAmount ? 450 : 600,
-      color: isAmount ? "#000000" : "#374151",
+      color: isAmount ? "#000000" : textColor,
       fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
       display: "flex",
       alignItems: "center",
@@ -190,7 +197,7 @@ export default function TelebirrSamplePage() {
   };
 
   const amount = useMemo(() => {
-    return `-${amountDigits || "0"}.00`;
+    return `-${formatDigitsWithCommas(amountDigits || "0")}.00`;
   }, [amountDigits]);
 
   const canGenerate = useMemo(() => {
@@ -218,7 +225,7 @@ export default function TelebirrSamplePage() {
   const handleRandomFill = () => {
     const d = new Date();
     // Match your requirement: default sample amount and fixed Transaction To + Bank Account.
-    setAmountDigits("3506");
+    setAmountDigits("5515");
     setTransactionNumber(randomTxnId());
     setTransactionTime(formatTelebirrTime(d));
     setTransactionTo("Mr Abdela Adem Muhammed");
@@ -354,7 +361,7 @@ export default function TelebirrSamplePage() {
                   <input
                     type="text"
                     inputMode="numeric"
-                    value={amountDigits}
+                    value={formatDigitsWithCommas(amountDigits)}
                     onChange={(e) => setAmountDigits(normalizeAmountDigits(e.target.value))}
                     placeholder="0"
                     className="flex-1 bg-transparent outline-none text-gray-800 font-bold text-lg"
@@ -462,6 +469,16 @@ export default function TelebirrSamplePage() {
                 />
               </div>
 
+              <div>
+                <label className="text-gray-400 text-xs font-bold uppercase tracking-[0.25em] pl-1">Text Color</label>
+                <input
+                  type="color"
+                  value={textColor}
+                  onChange={(e) => setTextColor(e.target.value)}
+                  className="mt-2 h-12 w-full rounded-[1.25rem] border-2 border-gray-100 bg-white p-2"
+                />
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
@@ -559,7 +576,7 @@ export default function TelebirrSamplePage() {
                       height: BOXES.etbLabel.y1 - BOXES.etbLabel.y0 + 1,
                       fontSize: 12,
                       fontWeight: 600,
-                      color: "#6B7280",
+                      color: textColor,
                       fontFamily:
                         "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
                       display: "flex",

@@ -16,10 +16,10 @@ const REFERENCE_H = 1024;
 // Detected from diff between your filled screenshot vs blank template (resized to 460x1024).
 const BOXES = {
   // Amount (e.g. "-6.00 (ETB)")
-  amountValue: { x0: 165, y0: 318, x1: 294, y1: 349 },
+  amountValue: { x0: 165, y0: 318, x1: 304, y1: 349 },
   // "(ETB)" sits immediately to the right of the amount area on this template.
   // Move slightly left to reduce the gap.
-  etbLabel: { x0: 292, y0: 333, x1: 345, y1: 350 },
+  etbLabel: { x0: 302, y0: 333, x1: 355, y1: 350 },
 
   // Value column boxes (widened to keep all values perfectly aligned and avoid clipping first letters).
   // Shift slightly up so values sit perfectly on the same baseline as the template rows.
@@ -47,6 +47,12 @@ function formatTelebirrTime(d: Date) {
   )}:${pad2(d.getSeconds())}`;
 }
 
+function formatDigitsWithCommas(digits: string) {
+  const onlyDigits = (digits ?? "").replace(/\D/g, "");
+  if (!onlyDigits) return "";
+  return onlyDigits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export default function TelebirrT2TSamplePage() {
   const receiptWrapRef = useRef<HTMLDivElement>(null);
 
@@ -59,13 +65,14 @@ export default function TelebirrT2TSamplePage() {
 
   // Fields for Telebirr→Telebirr.
   // Keep only the editable digits here, because the Telebirr amount is rendered as: -<digits>.00
-  const [amountDigits, setAmountDigits] = useState("5500");
+  const [amountDigits, setAmountDigits] = useState("5,508");
   const [transactionTime, setTransactionTime] = useState("");
   const [transactionType, setTransactionType] = useState("Transfer Money");
   const [transactionTo, setTransactionTo] = useState("abidela");
   const [transactionNumber, setTransactionNumber] = useState("");
 
   const [fontScale, setFontScale] = useState(1.2);
+  const [textColor, setTextColor] = useState("#404040");
   const [busy, setBusy] = useState(false);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
 
@@ -159,7 +166,7 @@ export default function TelebirrT2TSamplePage() {
       fontSize,
       lineHeight: "1",
       fontWeight: isAmount ? 500 : 600,
-      color: isAmount ? "#111827" : "#374151",
+      color: isAmount ? "#000000" : textColor,
       fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
       display: "flex",
       alignItems: "center",
@@ -183,7 +190,7 @@ export default function TelebirrT2TSamplePage() {
   };
 
   const amount = useMemo(() => {
-    return `-${amountDigits || "0"}.00`;
+    return `-${formatDigitsWithCommas(amountDigits || "0")}.00`;
   }, [amountDigits]);
 
   const canGenerate = useMemo(() => {
@@ -330,7 +337,7 @@ export default function TelebirrT2TSamplePage() {
                   <input
                     type="text"
                     inputMode="numeric"
-                    value={amountDigits}
+                    value={formatDigitsWithCommas(amountDigits)}
                     onChange={(e) => setAmountDigits(normalizeAmountDigits(e.target.value))}
                     placeholder="0"
                     className="flex-1 bg-transparent outline-none text-gray-800 font-bold text-lg"
@@ -411,6 +418,16 @@ export default function TelebirrT2TSamplePage() {
                 />
               </div>
 
+              <div>
+                <label className="text-gray-400 text-xs font-bold uppercase tracking-[0.25em] pl-1">Text Color</label>
+                <input
+                  type="color"
+                  value={textColor}
+                  onChange={(e) => setTextColor(e.target.value)}
+                  className="mt-2 h-12 w-full rounded-[1.25rem] border-2 border-gray-100 bg-white p-2"
+                />
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
@@ -472,7 +489,7 @@ export default function TelebirrT2TSamplePage() {
                         height: BOXES.etbLabel.y1 - BOXES.etbLabel.y0 + 1,
                         fontSize: 12,
                         fontWeight: 600,
-                        color: "#6B7280",
+                        color: textColor,
                         fontFamily:
                           "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
                         display: "flex",

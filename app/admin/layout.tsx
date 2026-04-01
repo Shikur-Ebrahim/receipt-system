@@ -133,7 +133,53 @@ export default function AdminLayout({
         </svg>
       ),
     },
+    {
+      name: "CBE App Green Template",
+      href: "/admin/cbe-app-green-sample-upload",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      ),
+    },
+    {
+      name: "CBE App Green Editor",
+      href: "/admin/cbe-app-green-sample",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5h9M11 12h9M11 19h9M4 6h.01M4 12h.01M4 18h.01" />
+        </svg>
+      ),
+    },
+    {
+      name: "CBE App Pink Template",
+      href: "/admin/cbe-app-pink-sample-upload",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      ),
+    },
+    {
+      name: "CBE App Pink Editor",
+      href: "/admin/cbe-app-pink-sample",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5h9M11 12h9M11 19h9M4 6h.01M4 12h.01M4 18h.01" />
+        </svg>
+      ),
+    },
   ];
+
+  const mobileNavLinks = navLinks.filter((link) =>
+    [
+      "/admin/dashboard",
+      "/admin/settings",
+      "/admin/payments",
+      "/admin/users",
+      "/admin/proofs",
+    ].includes(link.href)
+  );
 
   if (loading) {
     return (
@@ -247,7 +293,7 @@ export default function AdminLayout({
       {/* ── MOBILE BOTTOM TAB BAR (hidden on desktop) ── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
         <div className="flex items-stretch h-[72px]">
-          {navLinks.map((link) => {
+          {mobileNavLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
