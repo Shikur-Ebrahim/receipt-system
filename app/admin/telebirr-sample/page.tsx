@@ -20,11 +20,11 @@ const BOXES = {
   // Static "(ETB)" label position in the template so preview can render it.
   // (Detected from the sample template screenshot used by this project: 489x1024.)
   etbLabel: { x0: 277, y0: 313, x1: 313, y1: 329 },
-  transactionNumber: { x0: 355, y0: 414, x1: 450, y1: 426 },
-  transactionTime: { x0: 307, y0: 456, x1: 452, y1: 468 },
-  transactionTypeValue: { x0: 335, y0: 497, x1: 450, y1: 509 },
-  transactionTo: { x0: 257, y0: 539, x1: 452, y1: 551 },
-  bankAccountNumber: { x0: 99, y0: 581, x1: 450, y1: 593 },
+  transactionNumber: { x0: 350, y0: 425, x1: 450, y1: 440 },
+  transactionTime: { x0: 307, y0: 460, x1: 452, y1: 475 },
+  transactionTypeValue: { x0: 335, y0: 500, x1: 450, y1: 515 },
+  transactionTo: { x0: 200, y0: 542, x1: 452, y1: 556 },
+  bankAccountNumber: { x0: 99, y0: 581, x1: 450, y1: 595 },
   bankNameValue: { x0: 254, y0: 623, x1: 450, y1: 636 },
 } as const;
 

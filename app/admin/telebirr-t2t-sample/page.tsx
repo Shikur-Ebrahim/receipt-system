@@ -23,9 +23,9 @@ const BOXES = {
 
   // Value column boxes (widened to keep all values perfectly aligned and avoid clipping first letters).
   // Shift slightly up so values sit perfectly on the same baseline as the template rows.
-  transactionTime: { x0: 200, y0: 420, x1: 423, y1: 432 },
+  transactionTime: { x0: 200, y0: 415, x1: 423, y1: 437 },
   transactionType: { x0: 200, y0: 459, x1: 423, y1: 474 },
-  transactionTo: { x0: 200, y0: 499, x1: 423, y1: 510 },
+  transactionTo: { x0: 200, y0: 495, x1: 423, y1: 510 },
   // Give extra height so the text doesn't get clipped at the bottom.
   transactionNumber: { x0: 200, y0: 537, x1: 423, y1: 553 },
 } as const;
