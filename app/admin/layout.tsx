@@ -169,17 +169,39 @@ export default function AdminLayout({
         </svg>
       ),
     },
+    {
+      name: "Business License Template",
+      href: "/admin/business-license-sample-upload",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Business License Editor",
+      href: "/admin/business-license-sample",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+      ),
+    },
   ];
 
-  const mobileNavLinks = navLinks.filter((link) =>
-    [
-      "/admin/dashboard",
-      "/admin/settings",
-      "/admin/payments",
-      "/admin/users",
-      "/admin/proofs",
-    ].includes(link.href)
-  );
+  /**
+   * Mobile bottom tab bar only (lg:hidden). Business License Template/Editor and other template tools are not listed here —
+   * use Dashboard quick links on mobile or the full sidebar on desktop.
+   */
+  const MOBILE_BOTTOM_TAB_HREFS = new Set([
+    "/admin/dashboard",
+    "/admin/settings",
+    "/admin/payments",
+    "/admin/users",
+    "/admin/proofs",
+  ]);
+
+  const mobileNavLinks = navLinks.filter((link) => MOBILE_BOTTOM_TAB_HREFS.has(link.href));
 
   if (loading) {
     return (

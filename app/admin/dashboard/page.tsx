@@ -18,6 +18,8 @@ const sections = [
   { href: "/admin/cbe-app-green-sample", label: "CBE App Green Editor", icon: "✨", desc: "Edit message section + export image" },
   { href: "/admin/cbe-app-pink-sample-upload", label: "CBE App Pink Template", icon: "🩷", desc: "Upload pink app receipt screenshot" },
   { href: "/admin/cbe-app-pink-sample", label: "CBE App Pink Editor", icon: "🌸", desc: "Edit message section + export image" },
+  { href: "/admin/business-license-sample-upload", label: "Business License Template", icon: "📄", desc: "Upload license scan image" },
+  { href: "/admin/business-license-sample", label: "Business License Editor", icon: "✏️", desc: "Edit Amharic + English fields" },
 ];
 
 export default function AdminDashboard() {
