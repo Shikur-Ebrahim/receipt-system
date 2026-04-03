@@ -86,7 +86,7 @@ export default function CbeB2BSamplePage() {
   const [customerName, setCustomerName] = useState("Robel Birhanu Girma");
   const [payerAccount, setPayerAccount] = useState(generateMaskedAccount());
   const [receiverName, setReceiverName] = useState("Abdela Adem Muhammed");
-  const [receiverAccount, setReceiverAccount] = useState(generateMaskedAccount());
+  const [receiverAccount, setReceiverAccount] = useState("1****2291");
   const [paymentDateTime, setPaymentDateTime] = useState("Mar 28, 2026, 6:16 PM");
   const [referenceNo, setReferenceNo] = useState(generateRefNumber());
   const [reason, setReason] = useState("1");
@@ -254,10 +254,9 @@ export default function CbeB2BSamplePage() {
       // Auto-generate these fields on download.
       const nextRef = generateRefNumber();
       const nextPayerAcc = generateMaskedAccount();
-      const nextReceiverAcc = generateMaskedAccount();
       setReferenceNo(nextRef);
       setPayerAccount(nextPayerAcc);
-      setReceiverAccount(nextReceiverAcc);
+      // Receiver account: keep the sample's default last digits (2291) unless the admin edits it.
       // Wait for React to paint updated values before capturing.
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
