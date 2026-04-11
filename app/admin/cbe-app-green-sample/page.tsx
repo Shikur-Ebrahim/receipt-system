@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
 import { db } from "@/lib/firebase/config";
+import { randomSenderNameGreen } from "@/lib/cbe-ethiopian-sender-names";
 import { collection, doc, getDoc, getDocs, Timestamp } from "firebase/firestore";
 
 const FIRESTORE_COLLECTION = "cbe_app_green_sample";
@@ -12,14 +13,67 @@ const TEMPLATE_SUBCOLLECTION = "templates";
 const REFERENCE_W = 538;
 const REFERENCE_H = 960;
 
-const DEFAULT_MESSAGE = `ETB 5,500.00 debited from HADISH G/
-MARIYAM  G/MEDHIN for Mr Abdela
+/** Same as pink sample, e.g. 30-Mar-2026 (local date). */
+function formatGreenMessageDate(d: Date) {
+  const day = d.getDate();
+  const mon = d.toLocaleString("en-GB", { month: "short" });
+  const year = d.getFullYear();
+  return `${day}-${mon}-${year}`;
+}
+
+function generateGreenFtId() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let suffix = "";
+  for (let i = 0; i < 10; i++) {
+    suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `FT${suffix}`;
+}
+
+/**
+ * Green template layout (patronymic-style two-line sender like HADISH G/ / MARIYAM  G/MEDHIN),
+ * current date, random FT id; receiver block unchanged.
+ */
+function buildGreenSampleMessage(senderFullName: string, messageDate: Date, transactionId: string) {
+  const raw = senderFullName.trim().split(/\s+/).filter(Boolean);
+  const up = raw.map((p) => p.toUpperCase());
+  let first: string;
+  let father: string;
+  let grand: string;
+  if (up.length >= 3) {
+    first = up[0];
+    father = up[1];
+    grand = up[2];
+  } else if (up.length === 2) {
+    first = up[0];
+    father = up[1];
+    grand = up[1];
+  } else if (up.length === 1) {
+    first = up[0];
+    father = up[0];
+    grand = up[0];
+  } else {
+    first = "SENDER";
+    father = "X";
+    grand = "X";
+  }
+  const line1 = `${first} ${father.charAt(0)}/`;
+  const restGrand = grand.length > 1 ? grand.slice(1) : grand;
+  const line2 = `${grand}  ${father.charAt(0)}/${restGrand}`;
+  const dateStr = formatGreenMessageDate(messageDate);
+  return `ETB 5,500.00 debited from ${line1}
+${line2} for Mr Abdela
 Adem Muhammed-ETB-6665  on
-30-Mar-2026  with transaction ID:
-FT2608990690. Total Amount Debited
+${dateStr}  with transaction ID:
+${transactionId}. Total Amount Debited
 ETB 5001.20 with commission of ETB
 1.00 , 15% VAT of ETB0.15 and 5%
 Disaster Fund ofETB0.05.`;
+}
+
+function createAutoGreenMessage() {
+  return buildGreenSampleMessage(randomSenderNameGreen(), new Date(), generateGreenFtId());
+}
 
 type MessageBox = {
   x: number;
@@ -38,7 +92,7 @@ export default function CbeAppGreenSamplePage() {
   const [loadingTemplate, setLoadingTemplate] = useState(true);
   const [templateError, setTemplateError] = useState<string | null>(null);
 
-  const [message, setMessage] = useState(DEFAULT_MESSAGE);
+  const [message, setMessage] = useState(() => createAutoGreenMessage());
   const [fontScale, setFontScale] = useState(1.14);
   const [fontWeight, setFontWeight] = useState(786);
   const [lineHeight, setLineHeight] = useState(1.18);
@@ -110,6 +164,10 @@ export default function CbeAppGreenSamplePage() {
       }
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    setMessage(createAutoGreenMessage());
   }, []);
 
   const canGenerate = useMemo(() => {
@@ -245,6 +303,9 @@ export default function CbeAppGreenSamplePage() {
 
                 <div>
                   <label className="text-gray-400 text-xs font-bold uppercase tracking-[0.25em] pl-1">Message Text</label>
+                  <p className="text-[11px] text-gray-400 font-bold pl-1 mt-0.5">
+                    Sample block uses a separate pool of 2,000 unique regional names (green-style lines), today&apos;s date, and a random FT id—same idea as the pink editor.
+                  </p>
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -256,7 +317,7 @@ export default function CbeAppGreenSamplePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setMessage(DEFAULT_MESSAGE)}
+                    onClick={() => setMessage(createAutoGreenMessage())}
                     className="bg-[#8cc63f] hover:bg-[#7ab32f] text-white font-black py-3 rounded-[1.25rem] transition-all active:scale-[0.98] text-xs uppercase tracking-widest"
                   >
                     Use Sample Message

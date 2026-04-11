@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
 import { db } from "@/lib/firebase/config";
+import { randomSenderNamePink } from "@/lib/cbe-ethiopian-sender-names";
 import { collection, doc, getDoc, getDocs, Timestamp } from "firebase/firestore";
 
 const FIRESTORE_COLLECTION = "cbe_app_pink_sample";
@@ -12,13 +13,64 @@ const TEMPLATE_SUBCOLLECTION = "templates";
 const REFERENCE_W = 538;
 const REFERENCE_H = 960;
 
-const DEFAULT_MESSAGE = `ETB 5,500.00 debited from ANDUALEM TASEW
-SEMUYE for Mr Abdela Adem Muhammed-
-ETB-6665 on 29-Mar-2026  with transaction
-ID: FT260899MYKDR. Total Amount Debited
+const PINK_RECEIVER_LINE = "Mr Abdela Adem Muhammed";
+
+/** Same style as the template, e.g. 29-Mar-2026 (local date). */
+function formatPinkMessageDate(d: Date) {
+  const day = d.getDate();
+  const mon = d.toLocaleString("en-GB", { month: "short" });
+  const year = d.getFullYear();
+  return `${day}-${mon}-${year}`;
+}
+
+function generatePinkFtId() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let suffix = "";
+  for (let i = 0; i < 10; i++) {
+    suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `FT${suffix}`;
+}
+
+/**
+ * Matches the stock pink sample layout: sender in ALL CAPS (two lines when three name parts),
+ * current date, random FT id; receiver line unchanged.
+ */
+function buildPinkSampleMessage(senderFullName: string, messageDate: Date, transactionId: string) {
+  const parts = senderFullName
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((p) => p.toUpperCase());
+  let line1Suffix: string;
+  let line2Start: string;
+  if (parts.length === 0) {
+    line1Suffix = "SENDER";
+    line2Start = "";
+  } else if (parts.length === 1) {
+    line1Suffix = parts[0];
+    line2Start = "";
+  } else if (parts.length === 2) {
+    line1Suffix = `${parts[0]} ${parts[1]}`;
+    line2Start = "";
+  } else {
+    line1Suffix = `${parts[0]} ${parts[1]}`;
+    line2Start = `${parts.slice(2).join(" ")} `;
+  }
+  const dateStr = formatPinkMessageDate(messageDate);
+  const line2 = `${line2Start}for ${PINK_RECEIVER_LINE}-`;
+  return `ETB 5,500.00 debited from ${line1Suffix}
+${line2}
+ETB-6665 on ${dateStr}  with transaction
+ID: ${transactionId}. Total Amount Debited
 ETB 5001.20 with commission of ETB 1.00 ,
 15% VAT of ETB0.15 and 5% Disaster Fund
 ofETB0.05.`;
+}
+
+function createAutoPinkMessage() {
+  return buildPinkSampleMessage(randomSenderNamePink(), new Date(), generatePinkFtId());
+}
 
 type MessageBox = {
   x: number;
@@ -37,7 +89,7 @@ export default function CbeAppPinkSamplePage() {
   const [loadingTemplate, setLoadingTemplate] = useState(true);
   const [templateError, setTemplateError] = useState<string | null>(null);
 
-  const [message, setMessage] = useState(DEFAULT_MESSAGE);
+  const [message, setMessage] = useState(() => createAutoPinkMessage());
   const [fontScale, setFontScale] = useState(1.08);
   const [fontWeight, setFontWeight] = useState(386);
   const [lineHeight, setLineHeight] = useState(1.18);
@@ -107,6 +159,11 @@ export default function CbeAppPinkSamplePage() {
       }
     };
     load();
+  }, []);
+
+  // Refresh sender, date, and FT id using the browser clock after mount (SSR may differ).
+  useEffect(() => {
+    setMessage(createAutoPinkMessage());
   }, []);
 
   const canGenerate = useMemo(() => {
@@ -242,6 +299,9 @@ export default function CbeAppPinkSamplePage() {
 
                 <div>
                   <label className="text-gray-400 text-xs font-bold uppercase tracking-[0.25em] pl-1">Message Text</label>
+                  <p className="text-[11px] text-gray-400 font-bold pl-1 mt-0.5">
+                    Sample block uses its own pool of 2,000 unique regional names (shown ALL CAPS), today&apos;s date (e.g. 11-Apr-2026), and a random FT id. Receiver stays {PINK_RECEIVER_LINE}.
+                  </p>
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -253,7 +313,7 @@ export default function CbeAppPinkSamplePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setMessage(DEFAULT_MESSAGE)}
+                    onClick={() => setMessage(createAutoPinkMessage())}
                     className="bg-[#8cc63f] hover:bg-[#7ab32f] text-white font-black py-3 rounded-[1.25rem] transition-all active:scale-[0.98] text-xs uppercase tracking-widest"
                   >
                     Use Sample Message

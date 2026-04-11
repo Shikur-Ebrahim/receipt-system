@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
 import { db } from "@/lib/firebase/config";
+import { randomSenderNameB2b } from "@/lib/cbe-ethiopian-sender-names";
 import { collection, doc, getDoc, getDocs, Timestamp } from "firebase/firestore";
 
 const FIRESTORE_COLLECTION = "cbe_b2b_sample";
@@ -61,6 +62,21 @@ function generateMaskedAccount() {
   return `1****${last4}`;
 }
 
+/** Matches sample receipts, e.g. "Mar 28, 2026, 6:16 PM" — uses the device clock. */
+function formatPaymentDateTime(date: Date) {
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+/** Sample receiver on the template — fixed; only the sender uses random Ethiopian names. */
+const SAMPLE_RECEIVER_NAME = "Abdela Adem Muhammed";
+
 function to2(n: number) {
   return n.toFixed(2);
 }
@@ -83,11 +99,11 @@ export default function CbeB2BSamplePage() {
   const [templateError, setTemplateError] = useState<string | null>(null);
 
   // Form fields.
-  const [customerName, setCustomerName] = useState("Robel Birhanu Girma");
+  const [senderName, setSenderName] = useState(() => randomSenderNameB2b());
   const [payerAccount, setPayerAccount] = useState(generateMaskedAccount());
-  const [receiverName, setReceiverName] = useState("Abdela Adem Muhammed");
+  const receiverName = SAMPLE_RECEIVER_NAME;
   const [receiverAccount, setReceiverAccount] = useState("1****2291");
-  const [paymentDateTime, setPaymentDateTime] = useState("Mar 28, 2026, 6:16 PM");
+  const [paymentDateTime, setPaymentDateTime] = useState(() => formatPaymentDateTime(new Date()));
   const [referenceNo, setReferenceNo] = useState(generateRefNumber());
   const [reason, setReason] = useState("1");
 
@@ -162,6 +178,12 @@ export default function CbeB2BSamplePage() {
     load();
   }, []);
 
+  // Local date/time and a fresh Ethiopian sender name after mount (SSR clock / random may differ from the browser).
+  useEffect(() => {
+    setPaymentDateTime(formatPaymentDateTime(new Date()));
+    setSenderName(randomSenderNameB2b());
+  }, []);
+
   const vatAmount = useMemo(() => {
     const c = clampMoney(commission);
     return c * 0.15;
@@ -231,7 +253,7 @@ export default function CbeB2BSamplePage() {
   const canGenerate = useMemo(() => {
     return (
       !!templateUrl &&
-      customerName.trim() &&
+      senderName.trim() &&
       payerAccount.trim() &&
       receiverName.trim() &&
       receiverAccount.trim() &&
@@ -239,7 +261,7 @@ export default function CbeB2BSamplePage() {
       referenceNo.trim() &&
       reason.trim()
     );
-  }, [templateUrl, customerName, payerAccount, receiverName, receiverAccount, paymentDateTime, referenceNo, reason]);
+  }, [templateUrl, senderName, payerAccount, receiverName, receiverAccount, paymentDateTime, referenceNo, reason]);
 
   const handleDownload = async () => {
     if (!receiptWrapRef.current || !templateUrl) return;
@@ -382,11 +404,14 @@ export default function CbeB2BSamplePage() {
               )}
 
               <div>
-                <label className="text-gray-400 text-xs font-bold pl-1">Customer Name</label>
+                <label className="text-gray-400 text-xs font-bold pl-1">Sender name</label>
+                <p className="text-[11px] text-gray-400 font-bold pl-1 mt-0.5">
+                  Picks a random sender from 2,000 unique names (Amhara, Oromia, Tigray, Sidama, SNNPR, Somali Region, and others)—same text on the customer and payer lines.
+                </p>
                 <input
                   type="text"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
+                  value={senderName}
+                  onChange={(e) => setSenderName(e.target.value)}
                   className="mt-2 w-full bg-gray-50 border-2 border-gray-100 rounded-[1.25rem] px-5 py-4 text-gray-700 focus:outline-none focus:border-[#8cc63f] focus:bg-white transition-all text-lg font-semibold"
                 />
               </div>
@@ -413,12 +438,14 @@ export default function CbeB2BSamplePage() {
               </div>
 
               <div>
-                <label className="text-gray-400 text-xs font-bold pl-1">Receiver Name</label>
+                <label className="text-gray-400 text-xs font-bold pl-1">Receiver name</label>
+                <p className="text-[11px] text-gray-400 font-bold pl-1 mt-0.5">Fixed sample name for this template.</p>
                 <input
                   type="text"
+                  readOnly
                   value={receiverName}
-                  onChange={(e) => setReceiverName(e.target.value)}
-                  className="mt-2 w-full bg-gray-50 border-2 border-gray-100 rounded-[1.25rem] px-5 py-4 text-gray-700 focus:outline-none focus:border-[#8cc63f] focus:bg-white transition-all text-lg font-semibold"
+                  aria-readonly="true"
+                  className="mt-2 w-full bg-gray-100 border-2 border-gray-100 rounded-[1.25rem] px-5 py-4 text-gray-600 cursor-default text-lg font-semibold"
                 />
               </div>
 
@@ -578,9 +605,9 @@ export default function CbeB2BSamplePage() {
                   />
 
                   <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-                    <div style={overlayStyle(BOXES.customerNameTop, "right", customerName)}>{customerName}</div>
+                    <div style={overlayStyle(BOXES.customerNameTop, "right", senderName)}>{senderName}</div>
 
-                    <div style={overlayStyle(BOXES.payer, "right", customerName, "normal", yOffset)}>{customerName}</div>
+                    <div style={overlayStyle(BOXES.payer, "right", senderName, "normal", yOffset)}>{senderName}</div>
                     <div style={overlayStyle(BOXES.payerAccount, "right", payerAccount, "normal", yOffset)}>{payerAccount}</div>
                     <div style={overlayStyle(BOXES.receiver, "right", receiverName, "normal", yOffset)}>{receiverName}</div>
                     <div style={overlayStyle(BOXES.receiverAccount, "right", receiverAccount, "normal", yOffset)}>{receiverAccount}</div>
