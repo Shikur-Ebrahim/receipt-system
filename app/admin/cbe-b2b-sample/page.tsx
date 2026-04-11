@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
 import { db } from "@/lib/firebase/config";
 import { randomSenderNameB2b } from "@/lib/cbe-ethiopian-sender-names";
+import { randomLotteryReason } from "@/lib/lottery-reasons";
 import { collection, doc, getDoc, getDocs, Timestamp } from "firebase/firestore";
 
 const FIRESTORE_COLLECTION = "cbe_b2b_sample";
@@ -105,7 +106,7 @@ export default function CbeB2BSamplePage() {
   const [receiverAccount, setReceiverAccount] = useState("1****2291");
   const [paymentDateTime, setPaymentDateTime] = useState(() => formatPaymentDateTime(new Date()));
   const [referenceNo, setReferenceNo] = useState(generateRefNumber());
-  const [reason, setReason] = useState("1");
+  const [reason, setReason] = useState(() => randomLotteryReason());
 
   const [transferredAmount, setTransferredAmount] = useState("5500.00");
   const [commission, setCommission] = useState("0.61");
@@ -182,6 +183,7 @@ export default function CbeB2BSamplePage() {
   useEffect(() => {
     setPaymentDateTime(formatPaymentDateTime(new Date()));
     setSenderName(randomSenderNameB2b());
+    setReason(randomLotteryReason());
   }, []);
 
   const vatAmount = useMemo(() => {
