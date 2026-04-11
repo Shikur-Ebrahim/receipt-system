@@ -22,6 +22,8 @@ const FIRST_AMH_TIG = [
   "Hirut", "Almaz", "Mekdes", "Wondimu", "Eskinder", "Fasika", "Sisay", "Genet", "Tewodros", "Amanuel",
   "Mulugeta", "Rahel", "Yordanos", "Nardos", "Semhal", "Kokob", "Rediet", "Blen", "Mieraf", "Robel",
   "Aster", "Mesfin", "Tsega", "Hiwot", "Selome", "Yemisrach", "Mahder", "Yabsira", "Nebiyu", "Bisrat",
+  "Zewdu", "Abiy", "Sahle-Work", "Muluken", "Hachalu", "Abel", "Bruh", "Kaleb", "Eskinder", "Fitsum",
+  "Tigabu", "Dereje", "Belete", "Tamrat", "Fikadu", "Gashaw", "Muluneh", "Wondwosen", "Abebe", "Kebede",
 ];
 
 /** Oromia — common given names */
@@ -31,6 +33,8 @@ const FIRST_OROMO = [
   "Megersa", "Regassa", "Tilahun", "Umer", "Wakjira", "Abdata", "Bultum", "Chala", "Dawano", "Ejersa",
   "Fekadu", "Gemeda", "Habtamu", "Ibsa", "Jiregna", "Keno", "Lami", "Mosisa", "Negesso", "Obsi",
   "Raggasa", "Sori", "Tufa", "Urgessa", "Wario", "Yadata", "Zelalem", "Ararsa", "Bonsa", "Dibaba",
+  "Ifa", "Balis", "Kuma", "Sifan", "Ayantu", "Hawwi", "Mo'aa", "Obsan", "Kenna", "Biftu",
+  "Caala", "Galataa", "Heebana", "Obsaan", "Sonsa", "Tolasa", "Waaqoo", "Yaadataa", "Barite", "Kuulani",
 ];
 
 /** Sidama / SNNPR / Wolayta / Gurage / Hadiya */
@@ -124,13 +128,11 @@ function buildUniqueFullNames(seed: number, count: number): readonly string[] {
   const fa = FATHER_NAMES;
   const g = GRAND_NAMES;
   const out: string[] = [];
-  outer: for (const a of f) {
-    for (const b of fa) {
-      for (const c of g) {
-        out.push(`${a} ${b} ${c}`);
-        if (out.length >= count) break outer;
-      }
-    }
+  for (let i = 0; i < count; i++) {
+    const firstName = f[i % f.length]!;
+    const fatherName = fa[Math.floor(i / f.length) % fa.length]!;
+    const grandName = g[Math.floor(i / (f.length * fa.length)) % g.length]!;
+    out.push(`${firstName} ${fatherName} ${grandName}`);
   }
   if (out.length < count) {
     throw new Error(`cbe-ethiopian-sender-names: pools too small (got ${out.length}/${count})`);
